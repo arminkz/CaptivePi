@@ -13,6 +13,7 @@ killHotspot()
     dhcpcd  -n "$wifidev" >/dev/null 2>&1
 }
 
+ndsctl stop >/dev/null 2>&1
 if systemctl status hostapd | grep "(running)" >/dev/null 2>&1
 then #hotspot running and ssid in range
 	killHotspot

@@ -10,6 +10,7 @@ createHotspot()
     dhcpcd -k "$wifidev" >/dev/null 2>&1
     systemctl start dnsmasq
     systemctl start hostapd
+    nodogsplash
 }
 
 if systemctl status hostapd | grep "(running)" >/dev/null 2>&1
