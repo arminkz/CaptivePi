@@ -51,9 +51,6 @@ case "$METHOD" in
 		then #hotspot running and ssid in range
 			killHotspot
 			wpa_supplicant -B -i "$wifidev" -c /etc/wpa_supplicant/wpa_supplicant.conf >/dev/null 2>&1
-		elif { wpa_cli -i "$wifidev" status | grep 'ip_address'; } >/dev/null 2>&1
-		then #Already connected
-
 		else #ssid exists and no hotspot running connect to wifi network
 			wpa_supplicant -B -i "$wifidev" -c /etc/wpa_supplicant/wpa_supplicant.conf >/dev/null 2>&1
 		fi
