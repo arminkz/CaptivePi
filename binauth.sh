@@ -46,16 +46,18 @@ case "$METHOD" in
 		#add config to wpa_supplicant
 		sudo echo "network={\n\tssid=\"$USERNAME\"\n\tpsk=\"$PASSWORD\"\n\tkey_mgmt=WPA-PSK\n}" >> /etc/wpa_supplicant/wpa_supplicant.conf
 
-		#deactivate AP and connect normally
-		if systemctl status hostapd | grep "(running)" >/dev/null 2>&1
-		then #hotspot running and ssid in range
-			killHotspot
-			wpa_supplicant -B -i "$wifidev" -c /etc/wpa_supplicant/wpa_supplicant.conf >/dev/null 2>&1
-		else #ssid exists and no hotspot running connect to wifi network
-			wpa_supplicant -B -i "$wifidev" -c /etc/wpa_supplicant/wpa_supplicant.conf >/dev/null 2>&1
-		fi
+		wpa_cli terminate >/dev/null 2>&1
+		ip addr flush "$wifidev"
+		ip link set dev "$wifidev" down
+		rm -r /var/run/wpa_supplicant >/dev/null 2>&1
+
+		killHotspot
+		
+		wpa_supplicant -B -i "$wifidev" -c /etc/wpa_supplicant/wpa_supplicant.conf >/dev/null 2>&1
 
 		echo 0 0 0
+
+		ndsctl stop
 
 		;;
 	client_auth|client_deauth|idle_deauth|timeout_deauth|ndsctl_auth|ndsctl_deauth|shutdown_deauth)
